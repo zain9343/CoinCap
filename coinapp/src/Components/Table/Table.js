@@ -5,6 +5,7 @@ import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import "./Table"
@@ -13,6 +14,7 @@ import "./Table"
 export default function TableData() {
 
     const [coinCap, setCoinCap] = useState([])
+    const [limit, setLimit] = useState(50)
 
     useEffect(() => {
 
@@ -23,6 +25,12 @@ export default function TableData() {
         })
 
     }, [])
+    const LoadMore = () => {
+
+        setLimit((oldLimit) => oldLimit + 50)
+
+
+    }
     const StyledTableCell = styled(TableCell)(({ theme }) => ({
         [`&.${tableCellClasses.head}`]: {
             backgroundColor: theme.palette.common.black,
@@ -60,42 +68,44 @@ export default function TableData() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {coinCap.map((row) => {
+                        {coinCap.slice(0, limit).map((row) => {
+                            const images = "https://assets.coincap.io/assets/icons/" + row.symbol.toLowerCase() + "@2x.png"
                             return <StyledTableRow key={row.rank}>
                                 <StyledTableCell component="th" scope="row">
                                     {row.rank}
                                 </StyledTableCell>
                                 <StyledTableCell component="th" scope="row">
-                                    {row.id}<div>{row.symbol}</div>
+                                    <img src={images} width="50"></img>
+                                    {row.id.charAt(0).toUpperCase() + row.id.substring(1)}<div style={{ marginLeft: '26%' }}>{row.symbol}</div>
                                 </StyledTableCell>
                                 <StyledTableCell component="th" scope="row">
-                                    ${row.priceUsd}
+                                    ${parseInt(row.priceUsd).toFixed(2)}
                                 </StyledTableCell>
                                 <StyledTableCell component="th" scope="row">
-                                    ${row.marketCapUsd}
+                                    ${parseInt(row.marketCapUsd).toFixed(2)}b
                                 </StyledTableCell>
                                 <StyledTableCell component="th" scope="row">
-                                    ${row.vwap24Hr}
+                                    ${parseInt(row.vwap24Hr).toFixed(2)}
                                 </StyledTableCell>
                                 <StyledTableCell component="th" scope="row">
-                                    {row.supply}
+                                    {parseInt(row.supply).toFixed(2)}m
                                 </StyledTableCell>
                                 <StyledTableCell component="th" scope="row">
-                                    ${row.volumeUsd24Hr}
+                                    ${parseInt(row.volumeUsd24Hr).toFixed(2)}
                                 </StyledTableCell>
                                 <StyledTableCell component="th" scope="row">
-                                    {row.changePercent24Hr}
+                                    {parseInt(row.changePercent24Hr).toFixed(2)}%
                                 </StyledTableCell>
-
                             </StyledTableRow>
-
                         })}
                     </TableBody>
                 </Table>
-
-
-
             </TableContainer>
-        </div>
+            <div style={{ marginTop: "1%", marginBottom: "1%" }}>
+                <Button variant="contained" color="success" onClick={LoadMore}>
+                    View More
+                </Button>
+            </div>
+        </div >
     )
 }
